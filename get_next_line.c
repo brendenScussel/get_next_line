@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: bscussel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/05/18 19:47:10 by bscussel          #+#    #+#             */
-/*   Updated: 2019/05/30 16:04:18 by bscussel         ###   ########.fr       */
+/*   Created: 2019/08/07 17:27:10 by bscussel          #+#    #+#             */
+/*   Updated: 2019/08/07 17:28:15 by bscussel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,11 @@ int		strdiv(char **str, char **line, int fd)
 		if (str[fd][0] == '\0')
 			ft_strdel(&str[fd]);
 	}
+	else
+	{
+		*line = ft_strdup(*str);
+		ft_strdel(str);
+	}
 	return (1);
 }
 
@@ -49,7 +54,7 @@ int		get_next_line(const int fd, char **line)
 		tmp = ft_strjoin(str[fd], buff);
 		free(str[fd]);
 		str[fd] = tmp;
-		if (buff[red - 1] == '\0')
+		if (ft_strchr(str[fd], '\n'))
 			break ;
 	}
 	if (red < 0)
