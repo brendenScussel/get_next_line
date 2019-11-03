@@ -5,22 +5,18 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: bscussel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/05/18 19:18:37 by bscussel          #+#    #+#             */
-/*   Updated: 2019/05/30 16:04:34 by bscussel         ###   ########.fr       */
+/*   Created: 2019/10/22 22:59:37 by bscussel          #+#    #+#             */
+/*   Updated: 2019/11/01 21:59:33 by bscussel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef GET_NEXT_LINE_H
 # define GET_NEXT_LINE_H
-# define BUFF_SIZE 32
+# define BUFF_SIZE 255
 
 # include <fcntl.h>
-# include <sys/types.h>
-# include <sys/uio.h>
-# include <unistd.h>
-# include <stdlib.h>
 # include "./libft/libft.h"
 
-int		get_next_line(const int fd, char **line);
+int				get_next_line(const int fd, char **line);
 
 #endif

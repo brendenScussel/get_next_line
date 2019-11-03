@@ -5,61 +5,62 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: bscussel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/08/07 17:27:10 by bscussel          #+#    #+#             */
-/*   Updated: 2019/08/07 17:28:15 by bscussel         ###   ########.fr       */
+/*   Created: 2019/10/21 15:06:03 by bscussel          #+#    #+#             */
+/*   Updated: 2019/11/01 21:57:56 by bscussel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-int		strdiv(char **str, char **line, int fd)
+void				bs_bufclr(char buffer[])
 {
-	int		len;
-	char	*tmp;
+	size_t			i;
 
-	len = 0;
-	while (str[fd][len] != '\0' && str[fd][len] != '\n')
-		len++;
-	if (str[fd][len] == '\n' || str[fd][len] == '\0')
-	{
-		*line = ft_strsub(str[fd], 0, len);
-		tmp = ft_strdup(str[fd] + len + 1);
-		free(str[fd]);
-		str[fd] = tmp;
-		if (str[fd][0] == '\0')
-			ft_strdel(&str[fd]);
-	}
-	else
-	{
-		*line = ft_strdup(*str);
-		ft_strdel(str);
-	}
-	return (1);
+	i = 0;
+	if (!buffer)
+		return ;
+	while (i < BUFF_SIZE + 1)
+		buffer[i++] = '\0';
 }
 
-int		get_next_line(const int fd, char **line)
+void				line_apply(char **line, char **str, int fd)
 {
-	int				red;
-	char			buff[BUFF_SIZE + 1];
+	int				i;
+	int				len;
 	char			*tmp;
+	char			*cpy;
+
+	i = 0;
+	len = ft_strlen(str[fd]);
+	tmp = ft_strnew(sizeof(char) * len);
+	cpy = str[fd];
+	while (*cpy != '\n' && *cpy != '\0')
+		tmp[i++] = *cpy++;
+	(*cpy == '\n') ? cpy++ : 0;
+	str[fd] = ft_strcpy(str[fd], cpy);
+	*line = ft_strdup(tmp);
+	ft_strdel(&tmp);
+}
+
+int					get_next_line(const int fd, char **line)
+{
+	int				r;
+	char			buffer[BUFF_SIZE + 1];
 	static char		*str[255];
+	char			*ptr;
 
 	if (fd < 0 || line == NULL)
 		return (-1);
-	while ((red = read(fd, buff, BUFF_SIZE)) > 0)
+	bs_bufclr(buffer);
+	while ((r = read(fd, buffer, BUFF_SIZE)) > 0)
 	{
-		buff[red] = '\0';
-		if (str[fd] == NULL)
-			str[fd] = ft_strnew(red);
-		tmp = ft_strjoin(str[fd], buff);
-		free(str[fd]);
-		str[fd] = tmp;
-		if (ft_strchr(str[fd], '\n'))
-			break ;
+		ptr = str[fd];
+		str[fd] = (!str[fd]) ? ft_strdup(buffer) : ft_strjoin(str[fd], buffer);
+		bs_bufclr(buffer);
+		ft_strdel(&ptr);
 	}
-	if (red < 0)
-		return (-1);
-	else if (red == 0 && str[fd] == NULL)
-		return (0);
-	return (strdiv(str, line, fd));
+	if (r <= -1 || (r == 0 && (!(ft_strlen(str[fd])))))
+		return (r);
+	line_apply(line, str, fd);
+	return (1);
 }

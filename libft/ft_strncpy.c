@@ -6,7 +6,7 @@
 /*   By: bscussel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/03 13:44:22 by bscussel          #+#    #+#             */
-/*   Updated: 2019/05/05 20:05:19 by bscussel         ###   ########.fr       */
+/*   Updated: 2019/10/24 21:07:33 by bscussel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,11 @@ char	*ft_strncpy(char *dst, const char *src, size_t len)
 
 	tmp = dst;
 	while (len--)
-		*src ? (*dst++ = *src++)
-			: (*dst++ = '\0');
+	{
+		if (*src)
+			(*dst++ = *src++);
+		else
+			(*dst++ = '\0');
+	}
 	return (tmp);
 }
